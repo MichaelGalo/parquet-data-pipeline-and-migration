@@ -32,16 +32,23 @@ def parse_parquet(file):
 
 
 def main():
-    validate_mongo_connection()
-    validate_neon_connection(engine)
+    # Validate DB Connections
+    # validate_mongo_connection()
+    # validate_neon_connection(engine)
 
-    parsed_parquet_dataframe = parse_parquet("data/mtcars.parquet")
+    # Transform Data for Storage
+    # parsed_parquet_dataframe = parse_parquet("data/mtcars.parquet")
 
-    upload_data_to_neon(parsed_parquet_dataframe)
+    # Upload to Postgres
+    # upload_data_to_neon(parsed_parquet_dataframe)
 
+    # Ingest from Postgres
     neon_data = download_data_from_neon(postgres_cars)
 
-    # TODO: Send this data to Mongo
+    # Upload to MongoDB -- FIXME this expects a list of dictionaries and throws error. Need to transfer to SQLalchemy objects into a python dictionary
+    db.cars.insert_many(neon_data)
+
+    # Download from Mongo -- #TODO
 
 
 if __name__ == "__main__":

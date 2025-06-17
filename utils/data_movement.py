@@ -8,6 +8,7 @@ load_dotenv()
 
 neon_connection_string = f"postgresql://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOSTNAME')}/neondb?sslmode=require"
 engine = create_engine(neon_connection_string)
+connection = engine.connect()
 local_session = sessionmaker(bind=engine)
 
 
@@ -28,7 +29,3 @@ def download_data_from_neon(table):
         print(f"An error occurred while downloading data from Neon: {e}")
     finally:
         session.close()
-
-
-def upload_data_to_mongo(data):
-    pass
