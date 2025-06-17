@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from sqlalchemy import create_engine
+import pandas as pd
 
 load_dotenv()
 
@@ -16,12 +17,13 @@ mongo_client = MongoClient(mongo_connection_string)
 mongo_database = "Lab_One_10"
 db = mongo_client[mongo_database]
 
-# Either SQLAlchemy DB reflection or Table creation for .parquet data
-
 
 # logic for data movement
-def upload_data_to_neon(data):
-    pass
+def upload_data_to_neon(dataframe):
+    try:
+        dataframe.to_sql("my_table", con=engine, index=False)
+    except Exception as e:
+        print(f"An error occurred while uploading data to Neon: {e}")
 
 
 def download_data_from_neon():
@@ -40,8 +42,17 @@ def validate_mongo_connection():
         print(e)
 
 
+def parse_parquet(file):
+    df = pd.read_parquet(file)
+    return df
+
+
 def main():
     validate_mongo_connection()
+
+    parsed_parquet_dataframe = parse_parquet("data/mtcars.parquet")
+
+    upload_data_to_neon(parsed_parquet_dataframe)
 
 
 if __name__ == "__main__":
