@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
+from sqlalchemy import text
 
 load_dotenv()
 
@@ -15,3 +16,12 @@ def validate_mongo_connection():
         print("Pinged your deployment. You successfully connected to MongoDB!")
     except Exception as e:
         print(e)
+
+
+def validate_neon_connection(engine):
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        print("Successfully connected to Neon (Postgres)!")
+    except Exception as e:
+        print(f"Failed to connect to Neon: {e}")

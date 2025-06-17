@@ -2,7 +2,11 @@ import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from sqlalchemy import create_engine
-from utils import validate_mongo_connection, upload_data_to_neon
+from utils import (
+    validate_mongo_connection,
+    validate_neon_connection,
+    upload_data_to_neon,
+)
 import pandas as pd
 
 load_dotenv()
@@ -26,10 +30,11 @@ def parse_parquet(file):
 
 def main():
     validate_mongo_connection()
+    validate_neon_connection(engine)
 
-    parsed_parquet_dataframe = parse_parquet("data/mtcars.parquet")
+    # parsed_parquet_dataframe = parse_parquet("data/mtcars.parquet")
 
-    upload_data_to_neon(parsed_parquet_dataframe)
+    # upload_data_to_neon(parsed_parquet_dataframe)
 
 
 if __name__ == "__main__":
