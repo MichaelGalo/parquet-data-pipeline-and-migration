@@ -61,3 +61,10 @@
 - [ ] Perform end-to-end pipeline test
 
 ---
+
+## 8. Presentation
+- [ ] Create Slide Deck for Stakeholders
+- [ ] Delegate sections for each presenter
+- [ ] Attack Slide Deck Final to Project Root
+
+---
