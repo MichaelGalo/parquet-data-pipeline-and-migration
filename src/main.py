@@ -32,13 +32,13 @@ def parse_parquet(file):
 
 
 def main():
-    # validate_mongo_connection()
-    # validate_neon_connection(engine)
+    validate_mongo_connection()
+    validate_neon_connection(engine)
 
     # Transform Data for Storage
-    # parsed_parquet_dataframe = parse_parquet("data/mtcars.parquet")
+    parsed_parquet_dataframe = parse_parquet("data/mtcars.parquet")
 
-    # upload_data_to_neon(parsed_parquet_dataframe)
+    upload_data_to_neon(parsed_parquet_dataframe)
 
     neon_data = download_data_from_neon(postgres_cars)
 
@@ -48,7 +48,8 @@ def main():
     # Upload to MongoDB
     db.cars.insert_many(neon_data_formatted_for_mongo)
 
-    # Download from Mongo -- #TODO
+    # Download from a report from Mongo
+    # Insert Ad Hoc Query fn/logic here
 
 
 if __name__ == "__main__":
