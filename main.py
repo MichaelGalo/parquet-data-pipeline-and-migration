@@ -1,20 +1,23 @@
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Table, MetaData
 from utils import (
     validate_mongo_connection,
     validate_neon_connection,
     upload_data_to_neon,
+    download_data_from_neon,
 )
 import pandas as pd
 
 load_dotenv()
 
-# Connection to Neon
+# Connection to Neon & MetaData Details
 neon_connection_string = f"postgresql://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOSTNAME')}/neondb?sslmode=require"
 engine = create_engine(neon_connection_string)
 connection = engine.connect()
+metadata = MetaData()
+postgres_cars = Table("my_table", metadata, autoload_with=engine)
 
 # Connect to MongoDB
 mongo_connection_string = f"mongodb+srv://{os.getenv('MONGO_USERNAME')}:{os.getenv('MONGO_PASSWORD')}@{os.getenv('MONGO_HOSTNAME')}/?retryWrites=true&w=majority&appName=Cluster0"
@@ -32,9 +35,13 @@ def main():
     validate_mongo_connection()
     validate_neon_connection(engine)
 
-    # parsed_parquet_dataframe = parse_parquet("data/mtcars.parquet")
+    parsed_parquet_dataframe = parse_parquet("data/mtcars.parquet")
 
-    # upload_data_to_neon(parsed_parquet_dataframe)
+    upload_data_to_neon(parsed_parquet_dataframe)
+
+    neon_data = download_data_from_neon(postgres_cars)
+
+    # TODO: Send this data to Mongo
 
 
 if __name__ == "__main__":
